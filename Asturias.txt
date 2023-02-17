@@ -1,1 +1,7 @@
+<<<<<<< HEAD (mio juto)
 No salva no vamos a Covadonga
+=======
+hol que tal
+justo
+joan
+>>>>>>> Joan
