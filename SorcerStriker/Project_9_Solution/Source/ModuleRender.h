@@ -57,6 +57,7 @@ public:
 	// The speed at which the camera will be moving
 	int cameraSpeed = 3;
 
+	bool cameraLock = true;
 };
 
 #endif //__MODULE_RENDER_H__

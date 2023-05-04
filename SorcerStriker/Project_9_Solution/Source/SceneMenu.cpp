@@ -24,8 +24,8 @@ bool SceneMenu::Start()
 
 	bool ret = true;
 
-	bgTexture = App->textures->Load("Assets/Sprites/Background-inicio.png");
-	//App->audio->PlayMusic("Assets/Music/stage1.ogg", 1.0f);
+	bgTexture = App->textures->Load("Assets/Sprites/Background-menu1.png");
+	App->audio->PlayMusic("Assets/Music/introTitle.ogg", 1.0f);
 
 	//Bottomside collider
 	App->render->camera.x = 0;
@@ -55,7 +55,7 @@ Update_Status SceneMenu::PostUpdate()
 	//App->render->Blit(bgTexture, 0, 0, NULL);
 
 
-	App->render->Blit(bgTexture, 0, bgRect.y, NULL);
+	App->render->Blit(bgTexture, 0, 0, NULL);
 
 
 	return Update_Status::UPDATE_CONTINUE;

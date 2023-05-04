@@ -59,6 +59,8 @@ public:
 	//Template particle for a laser
 	Particle laser;
 
+	Particle sword;
+
 private:
 	// Particles spritesheet loaded into an SDL Texture
 	SDL_Texture* texture = nullptr;

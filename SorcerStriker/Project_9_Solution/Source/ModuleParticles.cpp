@@ -22,23 +22,22 @@ ModuleParticles::~ModuleParticles()
 bool ModuleParticles::Start()
 {
 	LOG("Loading particles");
-	texture = App->textures->Load("Assets/Sprites/particles.png");
+	texture = App->textures->Load("Assets/Sprites/proyectiles.png");
 
 	// Explosion particle
-	explosion.anim.PushBack({274, 296, 33, 30});
-	explosion.anim.PushBack({313, 296, 33, 30});
-	explosion.anim.PushBack({346, 296, 33, 30});
-	explosion.anim.PushBack({382, 296, 33, 30});
-	explosion.anim.PushBack({419, 296, 33, 30});
-	explosion.anim.PushBack({457, 296, 33, 30});
+	explosion.anim.PushBack({8, 0, 21, 23});
+	explosion.anim.PushBack({ 31, 0, 22, 24 });
+	explosion.anim.PushBack({ 53, 0, 26, 24 });
 	explosion.anim.loop = false;
-	explosion.anim.speed = 0.3f;
+	explosion.anim.speed = 0.1f;
 
-	laser.anim.PushBack({ 232, 103, 16, 12 });
-	laser.anim.PushBack({ 249, 103, 16, 12 });
-	laser.speed.y = -3;
+	laser.anim.PushBack({ 0, 0, 4, 17 });
+	laser.speed.y = -6;
 	laser.lifetime = 180;
-	laser.anim.speed = 0.2f;
+
+	sword.anim.PushBack({ 91, 2, 12, 84 });
+	sword.speed.y = -6;
+	sword.lifetime = 180;
 
 	for (uint i = 0; i < MAX_ACTIVE_PARTICLES; ++i)
 	{
@@ -59,7 +58,7 @@ Update_Status ModuleParticles::PreUpdate()
 	{
 		if (particles[i] != nullptr && particles[i]->pendingToDelete)
 		{
-			delete particles[i];
+ 			delete particles[i];
 			particles[i] = nullptr;
 		}
 	}

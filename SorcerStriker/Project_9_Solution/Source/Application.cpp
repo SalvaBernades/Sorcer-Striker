@@ -11,6 +11,7 @@
 #include "SceneLevel1.h"
 #include "ModuleParticles.h"
 #include "ModuleEnemies.h"
+#include "ModuleBoost.h"
 #include "ModuleCollisions.h"
 #include "ModuleFadeToBlack.h"
 #include "ModuleFonts.h"
@@ -33,11 +34,13 @@ Application::Application()
 	modules[7] =	player =		new ModulePlayer(false);	//Player starts disabled
 	modules[8] =	particles =		new ModuleParticles(true);
 	modules[9] =	enemies =		new ModuleEnemies(false);	//Enemies start disabled
+	modules[10] =	boost =			new ModuleBoost(true);
 
-	modules[10] =	collisions =	new ModuleCollisions(true);
-	modules[11] =	fade =			new ModuleFadeToBlack(true);
-	modules[12] =	fonts =			new ModuleFonts(true);
-	modules[13] =	render =		new ModuleRender(true);
+	modules[11] =	collisions =	new ModuleCollisions(true);
+	modules[12] =	fade =			new ModuleFadeToBlack(true);
+	modules[13] =	fonts =			new ModuleFonts(true);
+	modules[14] =	render =		new ModuleRender(true);
+	
 }
 
 Application::~Application()

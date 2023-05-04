@@ -5,14 +5,23 @@
 
 Enemy_BrownShip::Enemy_BrownShip(int x, int y) : Enemy(x, y)
 {
-	fly.PushBack({5,72,21,22});
-	currentAnim = &fly;
+	idle.PushBack({ 0,0,42,43 });
+
+	fly.PushBack({0,0,42,43});
+	fly.PushBack({ 60,0,42,43 });
+	fly.PushBack({ 119,0,42,43 });
+	fly.PushBack({ 173,0,42,43 });
+	fly.PushBack({ 223,0,42,43 });
+	fly.speed = 0.1f;
+	currentAnim = &idle;
 	
-	path.PushBack({-1.0f, -0.5f}, 100);
-	path.PushBack({-1.0f, 0.5f}, 80);
-	path.PushBack({-1.0f, 1.0f}, 80);
+	path.PushBack({-0.5f, -0.5f}, 200);
+	path.PushBack({0.5f, -0.5f}, 80);
+	path.PushBack({-1.0f, -1.0f}, 80);
+	path.PushBack({ 1.0f, -0.5f }, 200);
+	path.PushBack({ 0.5f, -0.5f }, 80);
 	
-	collider = App->collisions->AddCollider({0, 0, 24, 24}, Collider::Type::ENEMY, (Module*)App->enemies);
+	collider = App->collisions->AddCollider({0, 0, 42, 43}, Collider::Type::ENEMY, (Module*)App->enemies);
 }
 
 void Enemy_BrownShip::Update()

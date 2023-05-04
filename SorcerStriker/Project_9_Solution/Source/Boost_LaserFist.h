@@ -1,30 +1,26 @@
-#ifndef __ENEMY_BROWNSHIP_H__
-#define __ENEMY_BROWNSHIP_H__
-
-#include "Enemy.h"
-#include "Path.h"
-
-class Enemy_BrownShip : public Enemy
+#pragma once
+#include "Boost.h"
+class Boost_LaserFist :
+    public Boost
 {
 public:
 	// Constructor (x y coordinates in the world)
 	// Creates animation and movement data and the collider
-	Enemy_BrownShip(int x, int y);
+	Boost_LaserFist(int x, int y);
 
 	// The enemy is going to follow the different steps in the path
 	// Position will be updated depending on the speed defined at each step
 	void Update() override;
 
-private:
-	// A set of steps that define the position in the screen
-	// And an animation for each step
-	Path path;
+	void Shoot() override;
 
+private:
 	// This enemy has one sprite and one frame
 	// We are keeping it an animation for consistency with other enemies
-	Animation fly;
-
+	Animation box;
+	Animation fistShooting;
 	Animation idle;
+
+	bool shooting = false;
 };
 
-#endif // __ENEMY_BROWNSHIP_H__

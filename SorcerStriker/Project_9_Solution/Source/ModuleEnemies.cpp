@@ -27,8 +27,8 @@ ModuleEnemies::~ModuleEnemies()
 
 bool ModuleEnemies::Start()
 {
-	texture = App->textures->Load("Assets/Sprites/enemies.png");
-	//enemyDestroyedFx = App->audio->LoadFx("Assets/Fx/explosion.wav");
+	texture = App->textures->Load("Assets/Sprites/Emenies.png");
+	enemyDestroyedFx = App->audio->LoadFx("Assets/Fx/explosion.wav");
 
 	return true;
 }
@@ -171,7 +171,7 @@ void ModuleEnemies::SpawnEnemy(const EnemySpawnpoint& info)
 					break;
 			}
 			enemies[i]->texture = texture;
-			//enemies[i]->destroyedFx = enemyDestroyedFx;
+			enemies[i]->destroyedFx = enemyDestroyedFx;
 			break;
 		}
 	}

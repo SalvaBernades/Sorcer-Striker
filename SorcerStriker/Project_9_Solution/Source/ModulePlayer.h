@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Animation.h"
 #include "p2Point.h"
+#include "Timer.h"
 
 struct SDL_Texture;
 struct Collider;
@@ -50,8 +51,7 @@ public:
 	Animation idleAnim;
 	Animation goingrightAnim;
 	Animation goingleftAnim;
-	Animation rightAnim;
-	Animation leftAnim;
+	Animation rollAnim;
 
 	// The player's collider
 	Collider* collider = nullptr;
@@ -62,6 +62,8 @@ public:
 	// Sound effects indices
 	uint laserFx = 0;
 	uint explosionFx = 0;
+	uint roundclear = 0;
+	uint gameover = 0;
 
 	// Font score index
 	uint score = 000;
@@ -74,6 +76,16 @@ public:
 	uint lives;
 	char livesText[10] = { "\0" };
 
+	bool hit = false;
+	bool autowin = false;
+	bool autolose = false;
+	bool canMove = true;
+
+	SDL_Texture* winTexture = nullptr;
+	SDL_Texture* looseTexture = nullptr;
+
+	Timer changeScene;
+	Timer delay;
 };
 
 #endif //!__MODULE_PLAYER_H__
