@@ -52,6 +52,11 @@ bool ModuleWindow::Init()
 		}
 	}
 
+	if (WIN_FULLSCREEN) {
+		SDL_SetWindowInputFocus(window);
+		SDL_ShowCursor(SDL_DISABLE);
+	}
+
 	return ret;
 }
 

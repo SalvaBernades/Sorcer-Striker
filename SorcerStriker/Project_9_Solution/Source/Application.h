@@ -67,6 +67,14 @@ public:
 	ModuleFonts* fonts = nullptr;
 
 	ModuleRender* render = nullptr;
+
+private:
+	// Make the game run to 60 fps
+	const int FPS = 60;
+	const int frameDelay = 1000 / FPS;
+
+	int frameStart = 0;
+	int frameTime = 0;
 };
 
 // Global var made extern for Application ---

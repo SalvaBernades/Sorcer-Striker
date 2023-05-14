@@ -6,6 +6,14 @@
 #include "p2Point.h"
 #include "Timer.h"
 
+enum class Player_States
+{
+	INTRO,
+	PLAYING,
+	HIT,
+	DESTROYED,
+};
+
 struct SDL_Texture;
 struct Collider;
 
@@ -33,12 +41,14 @@ public:
 	// Collision callback, called when the player intersects with another collider
 	void OnCollision(Collider* c1, Collider* c2) override;
 
+	bool CleanUp() override;
+
 public:
 	// Position of the player in the map
 	iPoint position;
 
 	// The speed in which we move the player (pixels per frame)
-	int speed = 1;
+	int speed = 4;
 
 	// The player spritesheet loaded into an SDL_Texture
 	SDL_Texture* texture = nullptr;
@@ -79,13 +89,16 @@ public:
 	bool hit = false;
 	bool autowin = false;
 	bool autolose = false;
-	bool canMove = true;
+	bool canMove = false;
+
+	Player_States State;
 
 	SDL_Texture* winTexture = nullptr;
 	SDL_Texture* looseTexture = nullptr;
 
 	Timer changeScene;
-	Timer delay;
+	Timer shootdelay;
+	Timer spawnInvul;
 };
 
 #endif //!__MODULE_PLAYER_H__

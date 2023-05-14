@@ -33,6 +33,8 @@ public:
 	// Sets flag for deletion and for the collider aswell
 	virtual void SetToDelete();
 
+	virtual void createPathing(int pathing);
+
 public:
 	// The current position in the world
 	iPoint position;
@@ -46,6 +48,10 @@ public:
 	// A flag for the enemy removal. Important! We do not delete objects instantly
 	bool pendingToDelete = false;
 
+	int speed = 0;
+
+	int pathing;
+
 protected:
 	// A ptr to the current animation
 	Animation* currentAnim = nullptr;
@@ -55,6 +61,8 @@ protected:
 
 	// Original spawn position. Stored for movement calculations
 	iPoint spawnPos;
+
+	int lives;
 };
 
 #endif // __ENEMY_H__

@@ -39,15 +39,24 @@ void Enemy::Draw()
 
 void Enemy::OnCollision(Collider* collider)
 {
-	App->particles->AddParticle(App->particles->explosion, position.x, position.y);
-	App->audio->PlayFx(destroyedFx);
+	lives--;
+	if (lives <= 0) {
+		App->particles->AddParticle(App->particles->explosion, position.x, position.y);
+		App->audio->PlayFx(destroyedFx);
 
-	SetToDelete();
+		SetToDelete();
+	}
 }
 
 void Enemy::SetToDelete()
 {
 	pendingToDelete = true;
-	if (collider != nullptr)
+	if (collider != nullptr) {
 		collider->pendingToDelete = true;
+		collider = nullptr;
+	}
+}
+
+void Enemy::createPathing(int pathing)
+{
 }

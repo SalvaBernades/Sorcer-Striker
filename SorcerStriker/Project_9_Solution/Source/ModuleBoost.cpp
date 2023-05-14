@@ -92,6 +92,7 @@ bool ModuleBoost::CleanUp()
 	App->textures->Unload(textureBoost);
 	textureBox = nullptr;
 	textureBoost = nullptr;
+	App->audio->Unload(boostFX);
 
 	return true;
 }

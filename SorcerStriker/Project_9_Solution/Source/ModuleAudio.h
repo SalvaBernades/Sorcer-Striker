@@ -43,6 +43,8 @@ public:
 	// Receives an index from the sound fx array
 	bool PlayFx(uint index, int repeat = 0);
 
+	bool Unload(uint index);
+
 	void stopMusic();
 
 private:

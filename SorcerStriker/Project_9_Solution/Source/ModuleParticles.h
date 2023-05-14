@@ -58,8 +58,13 @@ public:
 
 	//Template particle for a laser
 	Particle laser;
+	Particle laserExplosion;
 
 	Particle sword;
+
+	Particle witchfireball;
+
+	Particle witchfireballreleased;
 
 private:
 	// Particles spritesheet loaded into an SDL Texture

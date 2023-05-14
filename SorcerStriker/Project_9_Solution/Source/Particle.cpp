@@ -1,11 +1,14 @@
 #include "Particle.h"
 
 #include "Collider.h"
+#include "ModuleRender.h"
+#include "Application.h"
 
 Particle::Particle()
 {
 	position.SetToZero();
 	speed.SetToZero();
+	pathing = false;
 }
 
 Particle::Particle(const Particle& p) : anim(p.anim), position(p.position), speed(p.speed),
@@ -43,9 +46,16 @@ bool Particle::Update()
 		else if (anim.HasFinished())
 			ret = false;
 
-		// Update the position in the screen
-		position.x += speed.x;
-		position.y += speed.y;
+		if (pathing) {
+			path.Update();
+			SpwanPos.y -= (App->render->cameraSpeed / 2);
+			position = SpwanPos + path.GetRelativePosition();
+		}
+		else {
+			// Update the position in the screen
+			position.x += speed.x;
+			position.y += speed.y;
+		}
 
 		if (collider != nullptr)
 			collider->SetPos(position.x, position.y);

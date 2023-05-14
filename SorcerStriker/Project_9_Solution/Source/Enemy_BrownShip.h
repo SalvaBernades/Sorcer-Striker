@@ -3,6 +3,8 @@
 
 #include "Enemy.h"
 #include "Path.h"
+#include "ModuleParticles.h"
+#include "Timer.h"
 
 class Enemy_BrownShip : public Enemy
 {
@@ -15,6 +17,8 @@ public:
 	// Position will be updated depending on the speed defined at each step
 	void Update() override;
 
+	void createPathing(int pathnum) override;
+
 private:
 	// A set of steps that define the position in the screen
 	// And an animation for each step
@@ -25,6 +29,13 @@ private:
 	Animation fly;
 
 	Animation idle;
+
+	bool created = false;
+
+	bool shoot = false;
+
+	Particle* fireball = nullptr;
+	Particle* fireballreleased = nullptr;
 };
 
 #endif // __ENEMY_BROWNSHIP_H__

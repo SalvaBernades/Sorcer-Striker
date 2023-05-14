@@ -12,6 +12,7 @@
 #include "ModuleBoost.h"
 
 #include <stdio.h>
+#include <string>
 
 ModulePlayer::ModulePlayer(bool startEnabled) : Module(startEnabled)
 {
@@ -22,13 +23,13 @@ ModulePlayer::ModulePlayer(bool startEnabled) : Module(startEnabled)
 	goingleftAnim.PushBack({ 419, 0, 30, 42 });
 	goingleftAnim.PushBack({ 374, 0, 30, 42 });
 	goingleftAnim.loop = false;
-	goingleftAnim.speed = 0.03f;
+	goingleftAnim.speed = 0.1f;
 
 	// Moving right
 	goingrightAnim.PushBack({ 54, 0, 32, 42 });
 	goingrightAnim.PushBack({ 100, 0, 31, 42 });
 	goingrightAnim.loop = false;
-	goingrightAnim.speed = 0.03f;
+	goingrightAnim.speed = 0.1f;
 
 	// rolling left
 	rollAnim.PushBack({ 0, 0, 39, 42 });
@@ -44,7 +45,7 @@ ModulePlayer::ModulePlayer(bool startEnabled) : Module(startEnabled)
 	rollAnim.PushBack({ 0, 0, 39, 42 });
 	rollAnim.PushBack({ 419, 0, 30, 42 });
 	rollAnim.PushBack({ 374, 0, 30, 42 });
-	rollAnim.speed = 0.09f;
+	rollAnim.speed = 0.3f;
 	rollAnim.loop = false;
 
 }
@@ -61,9 +62,12 @@ bool ModulePlayer::Start()
 	bool ret = true;
 	changeScene.resetTimer();
 	changeScene.setTimer(7000);
-	delay.setTimer(300);
+	shootdelay.setTimer(350);
+	spawnInvul.setTimer(2000);
 	autowin = false;
 	autolose = false;
+	godMode = false;
+	State = Player_States::INTRO;
 
 	texture = App->textures->Load("Assets/Sprites/naves_bien_4.png");
 	winTexture = App->textures->Load("Assets/Sprites/Stage_clear.png");
@@ -75,23 +79,17 @@ bool ModulePlayer::Start()
 	roundclear = App->audio->LoadFx("Assets/Fx/roundclrear.wav");
 	gameover = App->audio->LoadFx("Assets/Fx/gameover.wav");
 
-	//position.y = (App->render->camera.y / SCREEN_SIZE) + App->render->camera.h - idleAnim.GetCurrentFrame().h;
-	//position.x = (App->render->camera.x / SCREEN_SIZE) + (App->render->camera.w / 2) - (idleAnim.GetCurrentFrame().w / 2);
-	position.y = (App->render->camera.y / SCREEN_SIZE) + App->render->camera.h - idleAnim.GetCurrentFrame().h;
+	position.y = (App->render->camera.y) + App->render->camera.h - idleAnim.GetCurrentFrame().h - 30;
 	position.x = 60;
 
 	lives = 3;
-	score = 0;
+	score = 000;
 	canMove = false;
 	destroyed = false;
+	speed = 4;
 
-	collider = App->collisions->AddCollider({ position.x, position.y, 39, 42 }, Collider::Type::PLAYER, this);
+	collider = App->collisions->AddCollider({ position.x + 9, position.y + 6, 21, 30 }, Collider::Type::PLAYER, this);
 
-	// TODO 0: Notice how a font is loaded and the meaning of all its arguments 
-	//char lookupTable[] = { "!  ,_./0123456789$;<&?abcdefghijklmnopqrstuvwxyz" };
-	//scoreFont = App->fonts->Load("Assets/Fonts/rtype_font.png", "! @,_./0123456789$;<&?abcdefghijklmnopqrstuvwxyz", 1);
-
-	// TODO 4: Try loading "rtype_font3.png" that has two rows to test if all calculations are correct
 	char lookupTable[] = { "! @,_./0123456789$;< ?abcdefghijklmnopqrstuvwxyz" };
 	scoreFont = App->fonts->Load("Assets/Fonts/rtype_font3.png", lookupTable, 2);
 
@@ -102,35 +100,22 @@ bool ModulePlayer::Start()
 
 Update_Status ModulePlayer::Update()
 {
-	// Moving the player with the camera scroll
-	App->player->position.y -= 1;
-	if (App->player->position.y < -1500) {
-		canMove = true;
-	}
+	App->player->position.y -= App->render->cameraSpeed;
+	shootdelay.refreshTimer();
 
-	delay.refreshTimer();
-	
-	if (hit) {
-		if (rollAnim.HasFinished()) {
-			hit = !hit;
-			rollAnim.Reset();
-			// posar a la part inferior de la pantalla
- 			position.y = (App->render->camera.y / SCREEN_SIZE) + App->render->camera.h - idleAnim.GetCurrentFrame().h;
-			position.x = (App->render->camera.x / SCREEN_SIZE) + (App->render->camera.w/2) - (idleAnim.GetCurrentFrame().w/2);
-			godMode = false;
-			if (lives <= 0) {
-				destroyed = true;
-				collider->pendingToDelete = true;
-				collider = nullptr;
-				autolose = true;
-				App->audio->PlayFx(gameover, 0);
-				App->audio->stopMusic();
-				changeScene.resetTimer();
-			}
+	switch (State)
+	{
+	case Player_States::INTRO:
+
+		if (App->player->position.y < -1300) {
+			State = Player_States::PLAYING;
+			App->render->cameraSpeed = 4;
 		}
-	}
-	else if(canMove){
-		if (App->input->keys[SDL_SCANCODE_LEFT] == Key_State::KEY_REPEAT)
+		break;
+
+	case Player_States::PLAYING:
+
+		if (App->input->keys[SDL_SCANCODE_LEFT] == Key_State::KEY_REPEAT || App->input->pads->l_x < 0)
 		{
 			if ((position.x * SCREEN_SIZE) > App->render->camera.x) {
 				position.x -= speed;
@@ -143,7 +128,7 @@ Update_Status ModulePlayer::Update()
 			}
 		}
 
-		if (App->input->keys[SDL_SCANCODE_RIGHT] == Key_State::KEY_REPEAT)
+		if (App->input->keys[SDL_SCANCODE_RIGHT] == Key_State::KEY_REPEAT || App->input->pads->l_x > 0)
 		{
 			if ((position.x + idleAnim.GetCurrentFrame().w) * SCREEN_SIZE < (App->render->camera.w * SCREEN_SIZE)) {
 				position.x += speed;
@@ -156,28 +141,31 @@ Update_Status ModulePlayer::Update()
 			}
 		}
 
-		if (App->input->keys[SDL_SCANCODE_DOWN] == Key_State::KEY_REPEAT)
+		if (App->input->keys[SDL_SCANCODE_DOWN] == Key_State::KEY_REPEAT || App->input->pads->l_y > 0)
 		{
 			if ((position.y + idleAnim.GetCurrentFrame().h) * SCREEN_SIZE < App->render->camera.y + (App->render->camera.h * SCREEN_SIZE)) {
-				position.y += (speed+1);
+				position.y += speed;
 			}
 		}
 
-		if (App->input->keys[SDL_SCANCODE_UP] == Key_State::KEY_REPEAT)
+		if (App->input->keys[SDL_SCANCODE_UP] == Key_State::KEY_REPEAT || App->input->pads->l_y < 0)
 		{
 			if ((position.y * SCREEN_SIZE) > App->render->camera.y) {
-				position.y -= (speed+1);
+				position.y -= speed;
 			}
 		}
 
-		if (App->input->keys[SDL_SCANCODE_SPACE] == Key_State::KEY_DOWN)
+		if (App->input->keys[SDL_SCANCODE_SPACE] == Key_State::KEY_DOWN || App->input->pads->a)
 		{
-			if (!destroyed && !autowin && delay.hasCompleted()) {
-				Particle* newParticle = App->particles->AddParticle(App->particles->laser, position.x + 17, position.y, Collider::Type::PLAYER_SHOT);
+			if (shootdelay.hasCompleted()) {
+				Particle* newParticle = App->particles->AddParticle(App->particles->laser, position.x + 12, position.y, Collider::Type::PLAYER_SHOT);
 				newParticle->collider->AddListener(this);
+				newParticle = App->particles->AddParticle(App->particles->laser, position.x + 22, position.y, Collider::Type::PLAYER_SHOT);
+				newParticle->collider->AddListener(this);
+				newParticle = nullptr;
 				App->boost->Shoot();
 				App->audio->PlayFx(laserFx);
-				delay.resetTimer();
+				shootdelay.resetTimer();
 			}
 		}
 
@@ -185,57 +173,95 @@ Update_Status ModulePlayer::Update()
 		if (App->input->keys[SDL_SCANCODE_LEFT] == Key_State::KEY_IDLE
 			&& App->input->keys[SDL_SCANCODE_RIGHT] == Key_State::KEY_IDLE)
 			currentAnimation = &idleAnim;
+
+		if (hit) {
+			spawnInvul.refreshTimer();
+			if (spawnInvul.hasCompleted()) {
+				godMode = false;
+				hit = false;
+				spawnInvul.resetTimer();
+			}
+		}
+
+		break;
+
+	case Player_States::HIT:
+
+		if (rollAnim.HasFinished()) {
+			rollAnim.Reset();
+			spawnInvul.resetTimer();
+			hit = true;
+			// posar a la part inferior de la pantalla
+			position.y = (App->render->camera.y) + App->render->camera.h - idleAnim.GetCurrentFrame().h;
+			position.x = (App->render->camera.x) + (App->render->camera.w / 2) - (idleAnim.GetCurrentFrame().w / 2);
+			State = Player_States::PLAYING;
+			if (lives <= 0) {
+				autolose = true;
+				State = Player_States::DESTROYED;
+				App->audio->PlayFx(gameover, 0);
+				destroyed = true;
+				changeScene.resetTimer();
+			}
+		}
+		break;
+
+	case Player_States::DESTROYED:
+
+		if (collider != nullptr) {
+			collider->pendingToDelete = true;
+			collider = nullptr;
+			App->boost->CleanUp();
+			App->audio->stopMusic();
+		}
+		changeScene.refreshTimer();
+		if (changeScene.hasCompleted()) {
+			destroyed = true;
+			App->fade->FadeToBlack((Module*)App->sceneLevel_1, (Module*)App->sceneMenu, 60);
+		}
+		break;
+
+	default:
+		break;
 	}
 
-	// If F2 is pressed godMode gets activated
 	if (App->input->keys[SDL_SCANCODE_F2] == KEY_DOWN)
 		godMode = !godMode;
 
 	if (App->input->keys[SDL_SCANCODE_F3] == KEY_DOWN) {
 		if (!autowin && !autolose) {
-			autowin = true;
-			collider->pendingToDelete = true;
-			collider = nullptr;
-			App->boost->CleanUp();
-			App->audio->PlayFx(roundclear, 0);
-			App->audio->stopMusic();
 			changeScene.resetTimer();
+			autowin = true;
+			App->audio->PlayFx(roundclear, 0);
+			State = Player_States::DESTROYED;
 		}
 	}
 
-
 	if (App->input->keys[SDL_SCANCODE_F4] == KEY_DOWN) {
 		if (!autowin && !autolose) {
+			changeScene.resetTimer();
 			autolose = true;
 			destroyed = true;
-			collider->pendingToDelete = true;
-			collider = nullptr;
-			App->boost->CleanUp();
 			App->audio->PlayFx(gameover, 0);
-			App->audio->stopMusic();
-			changeScene.resetTimer();
+			State = Player_States::DESTROYED;
 		}
 	}
 
 	if (collider != nullptr) {
-		collider->SetPos(position.x, position.y);
+		collider->SetPos(position.x + 9, position.y + 6);
 	}
 
 	currentAnimation->Update();
 
-	// pRESS esc TO QUIT
+	// PRESS esc TO QUIT
 	if (App->input->keys[SDL_SCANCODE_ESCAPE] == Key_State::KEY_DOWN)
 	{
-		App->fonts->UnLoad(scoreFont);
-		destroyed = true;
-		App->boost->CleanUp();
-		App->fade->FadeToBlack((Module*)App->sceneLevel_1, (Module*)App->sceneMenu, 120);
-	}
-
-	if (autowin || autolose) {
-		changeScene.refreshTimer();
-		if (changeScene.hasCompleted()) {
-			App->fade->FadeToBlack((Module*)App->sceneLevel_1, (Module*)App->sceneMenu, 120);
+		if (collider != nullptr) {
+			collider->pendingToDelete = true;
+			collider = nullptr;
+			App->boost->CleanUp();
+			App->audio->stopMusic();
+			destroyed = true;
+			App->fade->FadeToBlack((Module*)App->sceneLevel_1, (Module*)App->sceneMenu, 60);
 		}
 	}
 
@@ -264,10 +290,10 @@ Update_Status ModulePlayer::PostUpdate()
 
 	// TODO 3: Blit the text of the score in at the bottom of the screen
 	App->fonts->BlitText(5, 3, scoreFont, "score");
-	App->fonts->BlitText(25, 3, scoreFont, scoreText);
+	App->fonts->BlitText(35, 3, scoreFont, scoreText);
 
 	App->fonts->BlitText(5, 13, scoreFont, "lives");
-	App->fonts->BlitText(25, 13, scoreFont, livesText);
+	App->fonts->BlitText(35, 13, scoreFont, livesText);
 
 	return Update_Status::UPDATE_CONTINUE;
 }
@@ -277,7 +303,7 @@ void ModulePlayer::OnCollision(Collider* c1, Collider* c2)
 	if (c1 == collider && destroyed == false && !godMode)
 	{
 		if (c2->type != Collider::Type::BOOST) {
-			App->particles->AddParticle(App->particles->explosion, position.x, position.y, Collider::Type::NONE, 9);
+			App->particles->AddParticle(App->particles->explosion, position.x, position.y, Collider::Type::NONE);
 
 			App->audio->PlayFx(explosionFx);
 			lives--;
@@ -285,11 +311,27 @@ void ModulePlayer::OnCollision(Collider* c1, Collider* c2)
 			hit = true;
 			godMode = true;
 			App->boost->CleanUp();
+			State = Player_States::HIT;
 		}
 	}
+}
 
-	if (c1->type == Collider::Type::PLAYER_SHOT && c2->type == Collider::Type::ENEMY)
-	{
-		score += 23;
+bool ModulePlayer::CleanUp()
+{
+	if (collider != nullptr) {
+		collider->pendingToDelete = true;
+		collider = nullptr;
 	}
+	App->textures->Unload(texture);
+	App->textures->Unload(winTexture);
+	App->textures->Unload(looseTexture);
+	App->fonts->UnLoad(scoreFont);
+	App->audio->Unload(laserFx);
+	App->audio->Unload(explosionFx);
+	App->audio->Unload(roundclear);
+	App->audio->Unload(gameover);
+	texture = nullptr;
+	winTexture = nullptr;
+	looseTexture = nullptr;
+	return true;
 }

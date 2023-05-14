@@ -37,6 +37,15 @@ bool ModuleRender::Init()
 		ret = false;
 	}
 
+	int w, h;
+	SDL_GetWindowSize(App->window->window, &w, &h);
+	SDL_Rect Viewport;
+	Viewport.x = (w / 2) - ((SCREEN_WIDTH * SCREEN_SIZE) / 2);
+	Viewport.y = (h / 2) - ((SCREEN_HEIGHT * SCREEN_SIZE) / 2);
+	Viewport.h = (SCREEN_HEIGHT * SCREEN_SIZE);
+	Viewport.w = (SCREEN_WIDTH * SCREEN_SIZE);
+	SDL_RenderSetViewport(renderer, &Viewport);
+
 	return ret;
 }
 
@@ -54,7 +63,7 @@ Update_Status ModuleRender::PreUpdate()
 
 Update_Status ModuleRender::Update()
 {
-	if (App->input->keys[SDL_SCANCODE_F5] == KEY_REPEAT) {
+	if (App->input->keys[SDL_SCANCODE_F5] == KEY_DOWN) {
 		if (cameraLock) {
 			cameraLock = false;
 		}

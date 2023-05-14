@@ -3,6 +3,15 @@
 
 #include "Module.h"
 #include "Animation.h"
+#include "Timer.h"
+
+
+enum class Scene_States
+{
+	INTRO,
+	FOREST,
+	SEA,
+};
 
 struct SDL_Texture;
 
@@ -37,9 +46,15 @@ public:
 	SDL_Texture* bgTextureForest = nullptr;
 	SDL_Texture* bgTextureFirst = nullptr;
 	SDL_Texture* bgTextureLast = nullptr;
+	SDL_Texture* bgTexturePlaya = nullptr;
+	SDL_Texture* bgTextureMar = nullptr;
 	SDL_Rect bgRect[2];
 
 	int changeBG;
+
+	Scene_States state;
+	bool start;
+	Timer sceneIntro;
 };
 
 #endif

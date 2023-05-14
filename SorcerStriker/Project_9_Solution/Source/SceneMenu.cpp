@@ -26,6 +26,7 @@ bool SceneMenu::Start()
 
 	bgTexture = App->textures->Load("Assets/Sprites/Background-menu1.png");
 	App->audio->PlayMusic("Assets/Music/introTitle.ogg", 1.0f);
+	App->textures->GetTextureSize(bgTexture,w, h);
 
 	//Bottomside collider
 	App->render->camera.x = 0;
@@ -36,9 +37,9 @@ bool SceneMenu::Start()
 
 Update_Status SceneMenu::Update()
 {
-	if (App->input->keys[SDL_SCANCODE_SPACE] == Key_State::KEY_DOWN)
+	if (App->input->keys[SDL_SCANCODE_SPACE] == Key_State::KEY_DOWN || App->input->pads->a)
 	{
-		App->fade->FadeToBlack(this, (Module*)App->sceneLevel_1, 120);
+		App->fade->FadeToBlack(this, (Module*)App->sceneLevel_1, 60);
 	}
 	if (App->input->keys[SDL_SCANCODE_ESCAPE] == Key_State::KEY_DOWN)
 	{
@@ -54,8 +55,7 @@ Update_Status SceneMenu::PostUpdate()
 	// Draw everything --------------------------------------
 	//App->render->Blit(bgTexture, 0, 0, NULL);
 
-
-	App->render->Blit(bgTexture, 0, 0, NULL);
+	App->render->Blit(bgTexture, 0, (SCREEN_HEIGHT/2) - (h/2), NULL);
 
 
 	return Update_Status::UPDATE_CONTINUE;

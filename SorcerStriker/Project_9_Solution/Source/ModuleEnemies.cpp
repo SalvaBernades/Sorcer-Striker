@@ -29,6 +29,7 @@ bool ModuleEnemies::Start()
 {
 	texture = App->textures->Load("Assets/Sprites/Emenies.png");
 	enemyDestroyedFx = App->audio->LoadFx("Assets/Fx/explosion.wav");
+	dragonstexture = App->textures->Load("Assets/Sprites/Dragones.png");
 
 	return true;
 }
@@ -87,15 +88,20 @@ bool ModuleEnemies::CleanUp()
 			delete enemies[i];
 			enemies[i] = nullptr;
 		}
+		if (spawnQueue[i].type != Enemy_Type::NO_TYPE)
+		{
+			spawnQueue[i].type = Enemy_Type::NO_TYPE;
+		}
 	}
 
 	App->textures->Unload(texture);
+	App->audio->Unload(enemyDestroyedFx);
 	texture = nullptr;
 
 	return true;
 }
 
-bool ModuleEnemies::AddEnemy(Enemy_Type type, int x, int y)
+bool ModuleEnemies::AddEnemy(Enemy_Type type, int x, int y, int pathing)
 {
 	bool ret = false;
 
@@ -106,6 +112,7 @@ bool ModuleEnemies::AddEnemy(Enemy_Type type, int x, int y)
 			spawnQueue[i].type = type;
 			spawnQueue[i].x = x;
 			spawnQueue[i].y = y;
+			spawnQueue[i].pathing = pathing;
 			ret = true;
 			break;
 		}
@@ -121,13 +128,24 @@ void ModuleEnemies::HandleEnemiesSpawn()
 	{
 		if (spawnQueue[i].type != Enemy_Type::NO_TYPE)
 		{
-			// Spawn a new enemy if the screen has reached a spawn position
-			if (spawnQueue[i].y * SCREEN_SIZE > App->render->camera.y - SPAWN_MARGIN)
-			{
-				LOG("Spawning enemy at %d", spawnQueue[i].y * SCREEN_SIZE);
+			if (spawnQueue[i].type == Enemy_Type::MECH) {
+				if (spawnQueue[i].y * SCREEN_SIZE > App->render->camera.y - 120) {
 
-				SpawnEnemy(spawnQueue[i]);
-				spawnQueue[i].type = Enemy_Type::NO_TYPE; // Removing the newly spawned enemy from the queue
+					LOG("Spawning enemy at %d", spawnQueue[i].y * SCREEN_SIZE);
+
+					SpawnEnemy(spawnQueue[i]);
+					spawnQueue[i].type = Enemy_Type::NO_TYPE; // Removing the newly spawned enemy from the queue
+				}
+			}
+			// Spawn a new enemy if the screen has reached a spawn position
+			else {
+				if (spawnQueue[i].y * SCREEN_SIZE > App->render->camera.y - SPAWN_MARGIN) {
+
+					LOG("Spawning enemy at %d", spawnQueue[i].y * SCREEN_SIZE);
+
+					SpawnEnemy(spawnQueue[i]);
+					spawnQueue[i].type = Enemy_Type::NO_TYPE; // Removing the newly spawned enemy from the queue
+				}
 			}
 		}
 	}
@@ -145,7 +163,7 @@ void ModuleEnemies::HandleEnemiesDespawn()
 			{
 				LOG("DeSpawning enemy at %d", enemies[i]->position.y * SCREEN_SIZE);
 
-				enemies[i]->SetToDelete();
+ 				enemies[i]->SetToDelete();
 			}
 		}
 	}
@@ -162,15 +180,18 @@ void ModuleEnemies::SpawnEnemy(const EnemySpawnpoint& info)
 			{
 				case Enemy_Type::REDBIRD:
 					enemies[i] = new Enemy_RedBird(info.x, info.y);
+					enemies[i]->texture = texture;
 					break;
 				case Enemy_Type::BROWNSHIP:
 					enemies[i] = new Enemy_BrownShip(info.x, info.y);
+					enemies[i]->texture = texture;
 					break;
 				case Enemy_Type::MECH:
 					enemies[i] = new Enemy_Mech(info.x, info.y);
+					enemies[i]->texture = dragonstexture;
 					break;
 			}
-			enemies[i]->texture = texture;
+			enemies[i]->createPathing(info.pathing);
 			enemies[i]->destroyedFx = enemyDestroyedFx;
 			break;
 		}

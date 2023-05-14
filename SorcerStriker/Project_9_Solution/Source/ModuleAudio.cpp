@@ -61,8 +61,10 @@ bool ModuleAudio::CleanUp()
 
 	for (uint i = 0; i < MAX_FX; ++i)
 	{
-		if(soundFx[i] != nullptr)
+		if (soundFx[i] != nullptr) {
 			Mix_FreeChunk(soundFx[i]);
+			soundFx[i] = nullptr;
+		}
 	}
 	
 	Mix_CloseAudio();
@@ -153,6 +155,20 @@ bool ModuleAudio::PlayFx(uint index, int repeat)
 	if(soundFx[index] != nullptr)
 	{
 		Mix_PlayChannel(-1, soundFx[index], repeat);
+		ret = true;
+	}
+
+	return ret;
+}
+
+bool ModuleAudio::Unload(uint index)
+{
+	bool ret = false;
+
+	if (soundFx[index] != nullptr)
+	{
+		Mix_FreeChunk(soundFx[index]);
+		soundFx[index] = nullptr;
 		ret = true;
 	}
 

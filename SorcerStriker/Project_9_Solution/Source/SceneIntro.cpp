@@ -39,9 +39,9 @@ bool SceneIntro::Start()
 
 Update_Status SceneIntro::Update()
 {
-	if (App->input->keys[SDL_SCANCODE_SPACE] == Key_State::KEY_DOWN)
+	if (App->input->keys[SDL_SCANCODE_SPACE] == Key_State::KEY_DOWN || App->input->pads->a)
 	{
-		App->fade->FadeToBlack(this, (Module*)App->sceneMenu, 120);
+		App->fade->FadeToBlack(this, (Module*)App->sceneMenu, 60);
 	}
 	if (App->input->keys[SDL_SCANCODE_ESCAPE] == Key_State::KEY_DOWN)
 	{
@@ -80,10 +80,10 @@ Update_Status SceneIntro::PostUpdate()
 	App->fonts->BlitText(4, 220, introFont, "salvador bernades iglesias");
 	App->fonts->BlitText(4, 230, introFont, "biel linan garcia");
 
-	App->render->Blit(bgTexture, 0, 250, NULL);
+	App->render->Blit(bgTexture, 0, 380, NULL);
 
-	App->fonts->BlitText(4, 358, introFont, "github.com/joanmarquesbesses");
-	App->fonts->BlitText(4, 368, introFont, "/sorcer_striker");
+	App->fonts->BlitText(4, 490, introFont, "github.com/joanmarquesbesses");
+	App->fonts->BlitText(4, 500, introFont, "/sorcer_striker");
 
 	return Update_Status::UPDATE_CONTINUE;
 }

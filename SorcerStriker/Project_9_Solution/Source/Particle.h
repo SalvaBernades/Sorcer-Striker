@@ -3,6 +3,7 @@
 
 #include "Animation.h"
 #include "p2Point.h"
+#include "Path.h"
 
 struct Collider;
 
@@ -52,6 +53,12 @@ public:
 
 	// A flag for the particle removal. Important! We do not delete objects instantly
 	bool pendingToDelete = false;
+
+	Path path;
+
+	bool pathing = false;
+
+	iPoint SpwanPos;
 };
 
 #endif //__PARTICLE_H__

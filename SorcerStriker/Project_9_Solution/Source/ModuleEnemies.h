@@ -17,6 +17,7 @@ struct EnemySpawnpoint
 {
 	Enemy_Type type = Enemy_Type::NO_TYPE;
 	int x, y;
+	int pathing;
 };
 
 class Enemy;
@@ -56,7 +57,7 @@ public:
 	void OnCollision(Collider* c1, Collider* c2) override;
 
 	// Add an enemy into the queue to be spawned later
-	bool AddEnemy(Enemy_Type type, int x, int y);
+	bool AddEnemy(Enemy_Type type, int x, int y, int pathing);
 
 	// Iterates the queue and checks for camera position
 	void HandleEnemiesSpawn();
@@ -77,6 +78,7 @@ private:
 
 	// The enemies sprite sheet
 	SDL_Texture* texture = nullptr;
+	SDL_Texture* dragonstexture = nullptr;
 
 	// The audio fx for destroying an enemy
 	int enemyDestroyedFx = 0;

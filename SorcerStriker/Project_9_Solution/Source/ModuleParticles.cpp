@@ -12,6 +12,42 @@ ModuleParticles::ModuleParticles(bool startEnabled) : Module(startEnabled)
 {
 	for(uint i = 0; i < MAX_ACTIVE_PARTICLES; ++i)
 		particles[i] = nullptr;
+
+	// Explosion particle
+	explosion.anim.PushBack({ 118, 50, 32, 34 });
+	explosion.anim.PushBack({ 157, 6, 32, 33 });
+	explosion.anim.PushBack({ 160, 52, 32, 32 });
+	explosion.anim.loop = false;
+	explosion.anim.speed = 0.15f;
+
+	laser.anim.PushBack({ 0, 0, 4, 17 });
+	laser.speed.y = -20;
+	laser.lifetime = 35;
+
+	laserExplosion.anim.PushBack({ 0, 26, 4, 5 });
+	laserExplosion.anim.PushBack({ 7, 26, 4, 4 });
+	laserExplosion.anim.PushBack({ 14, 27, 4, 3 });
+	laserExplosion.anim.PushBack({ 22, 27, 2, 2 });
+	laserExplosion.anim.loop = false;
+	laserExplosion.anim.speed = 0.3f;
+
+	sword.anim.PushBack({ 91, 2, 12, 84 });
+	sword.speed.y = -20;
+	sword.lifetime = 50;
+
+	witchfireball.anim.PushBack({ 8, 0, 22, 24 });
+	witchfireball.anim.PushBack({ 30, 0, 23, 25 });
+	witchfireball.anim.PushBack({ 53, 0, 26, 25 });
+	witchfireball.anim.loop = false;
+	witchfireball.lifetime = 200;
+	witchfireball.anim.speed = 0.03f;
+
+	witchfireballreleased.anim.PushBack({ 30, 0, 23, 25 });
+	witchfireballreleased.anim.PushBack({ 53, 0, 26, 25 });
+	witchfireballreleased.anim.loop = true;
+	witchfireballreleased.lifetime = 200;
+	witchfireballreleased.anim.speed = 0.05f;
+
 }
 
 ModuleParticles::~ModuleParticles()
@@ -23,21 +59,6 @@ bool ModuleParticles::Start()
 {
 	LOG("Loading particles");
 	texture = App->textures->Load("Assets/Sprites/proyectiles.png");
-
-	// Explosion particle
-	explosion.anim.PushBack({8, 0, 21, 23});
-	explosion.anim.PushBack({ 31, 0, 22, 24 });
-	explosion.anim.PushBack({ 53, 0, 26, 24 });
-	explosion.anim.loop = false;
-	explosion.anim.speed = 0.1f;
-
-	laser.anim.PushBack({ 0, 0, 4, 17 });
-	laser.speed.y = -6;
-	laser.lifetime = 180;
-
-	sword.anim.PushBack({ 91, 2, 12, 84 });
-	sword.speed.y = -6;
-	sword.lifetime = 180;
 
 	for (uint i = 0; i < MAX_ACTIVE_PARTICLES; ++i)
 	{
@@ -94,6 +115,9 @@ void ModuleParticles::OnCollision(Collider* c1, Collider* c2)
 		{
 			particles[i]->pendingToDelete = true;
 			particles[i]->collider->pendingToDelete = true;
+			if (particles[i]->collider->type = Collider::Type::PLAYER_SHOT) {
+				App->particles->AddParticle(laserExplosion, particles[i]->position.x, particles[i]->position.y, Collider::Type::NONE);
+			}
 			break;
 		}
 	}
