@@ -59,6 +59,7 @@ public:
 	//Template particle for a laser
 	Particle laser;
 	Particle laserExplosion;
+	Particle dragronShoot;
 
 	Particle sword;
 

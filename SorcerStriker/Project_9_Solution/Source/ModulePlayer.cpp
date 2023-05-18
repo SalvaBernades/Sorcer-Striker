@@ -87,6 +87,8 @@ bool ModulePlayer::Start()
 	canMove = false;
 	destroyed = false;
 	speed = 4;
+	playerWidth = 39;
+	playerHeigth = 42;
 
 	collider = App->collisions->AddCollider({ position.x + 9, position.y + 6, 21, 30 }, Collider::Type::PLAYER, this);
 
@@ -109,7 +111,7 @@ Update_Status ModulePlayer::Update()
 
 		if (App->player->position.y < -1300) {
 			State = Player_States::PLAYING;
-			App->render->cameraSpeed = 4;
+			App->render->cameraSpeed = 5;
 		}
 		break;
 
@@ -177,7 +179,6 @@ Update_Status ModulePlayer::Update()
 		if (hit) {
 			spawnInvul.refreshTimer();
 			if (spawnInvul.hasCompleted()) {
-				godMode = false;
 				hit = false;
 				spawnInvul.resetTimer();
 			}
@@ -190,7 +191,6 @@ Update_Status ModulePlayer::Update()
 		if (rollAnim.HasFinished()) {
 			rollAnim.Reset();
 			spawnInvul.resetTimer();
-			hit = true;
 			// posar a la part inferior de la pantalla
 			position.y = (App->render->camera.y) + App->render->camera.h - idleAnim.GetCurrentFrame().h;
 			position.x = (App->render->camera.x) + (App->render->camera.w / 2) - (idleAnim.GetCurrentFrame().w / 2);
@@ -300,7 +300,7 @@ Update_Status ModulePlayer::PostUpdate()
 
 void ModulePlayer::OnCollision(Collider* c1, Collider* c2)
 {
-	if (c1 == collider && destroyed == false && !godMode)
+	if (c1 == collider && destroyed == false && !godMode && !hit)
 	{
 		if (c2->type != Collider::Type::BOOST) {
 			App->particles->AddParticle(App->particles->explosion, position.x, position.y, Collider::Type::NONE);
@@ -309,7 +309,6 @@ void ModulePlayer::OnCollision(Collider* c1, Collider* c2)
 			lives--;
 			currentAnimation = &rollAnim;
 			hit = true;
-			godMode = true;
 			App->boost->CleanUp();
 			State = Player_States::HIT;
 		}

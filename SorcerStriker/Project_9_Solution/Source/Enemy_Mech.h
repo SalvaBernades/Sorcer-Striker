@@ -3,6 +3,14 @@
 
 #include "Enemy.h"
 #include "Path.h"
+#include "Timer.h"
+#include "ModuleParticles.h"
+
+enum class Drake_States
+{
+	FRONT,
+	SHOOTING,
+};
 
 class Enemy_Mech : public Enemy
 {
@@ -20,7 +28,14 @@ private:
 	Path path;
 
 	// Enemy animations
-	Animation front, back;
+	Animation front;
+
+	Timer switchState;
+	Timer shootDelay;
+	int maxShoots = 5;
+	Particle* shoot;
+
+	Drake_States State;
 };
 
 #endif // __ENEMY_MECH_H__

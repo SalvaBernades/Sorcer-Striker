@@ -34,33 +34,48 @@ void Enemy_BrownShip::Update()
 	position = spawnPos + path.GetRelativePosition();
 
 	if (!created) {
+		// casting particle
 		fireball = App->particles->AddParticle(App->particles->witchfireball,
 			position.x + (currentAnim->GetCurrentFrame().w / 2),
 			position.y + (currentAnim->GetCurrentFrame().h / 2),
 			Collider::Type::ENEMY_SHOT, 9);
 		created = true;
 	}
-	if (!shoot) {
+	if (!shoot && fireball->isAlive) {
 		fireball->position.x = position.x + (currentAnim->GetCurrentFrame().w / 2) - (fireball->anim.GetCurrentFrame().w / 2);
 		fireball->position.y = position.y + (currentAnim->GetCurrentFrame().h / 2) - (fireball->anim.GetCurrentFrame().h / 2) + 20;
+
 		if (fireball->anim.HasFinished()){
+			// realised particle
 			fireballreleased = App->particles->AddParticle(App->particles->witchfireballreleased,
 				position.x + (currentAnim->GetCurrentFrame().w / 2),
 				position.y + (currentAnim->GetCurrentFrame().h / 2) + 20,
 				Collider::Type::ENEMY_SHOT);
 			fireballreleased->SpwanPos.x = position.x + (currentAnim->GetCurrentFrame().w / 2) - (fireball->anim.GetCurrentFrame().w / 2);
 			fireballreleased->SpwanPos.y = position.y + (currentAnim->GetCurrentFrame().h / 2) - (fireball->anim.GetCurrentFrame().h / 2) + 20;
-			fPoint player = { (float)App->player->position.x, (float)App->player->position.y };
-			fPoint bola = { (float)fireballreleased->SpwanPos.x, (float)fireballreleased->SpwanPos.y };
-			float distanceX = (player.operator-(bola).x);
-			float distanceY = (player.operator-(bola).y);
-			fPoint direction = { (bola.operator-(player).x) / bola.DistanceTo(player) ,(bola.operator-(player).y) / bola.DistanceTo(player) };
-			shoot = true;
-			fireballreleased->path.PushBack({ -(direction.x * 3.0f), -(direction.y * 3.0f) }, 25, &fireballreleased->anim);
 			fireballreleased->pathing = true;
+			// direction's calculation
+			fPoint player = { (float)App->player->position.x + (App->player->playerWidth/2),
+				(float)App->player->position.y + (App->player->playerHeigth / 2)};
+			fPoint bola = { (float)fireballreleased->SpwanPos.x + (fireballreleased->anim.GetCurrentFrame().w/2), 
+				(float)fireballreleased->SpwanPos.y + (fireballreleased->anim.GetCurrentFrame().h / 2) };
+			if (player.y > bola.y) {
+				player.y -= 50.0f;
+			}
+			fPoint direction;
+			direction = (player - bola);
+			direction.Unit();
+			if (player.y < bola.y) {
+				fireballreleased->path.PushBack({ (direction.x * 2.0f), (direction.y * 4.0f) }, 25, &fireballreleased->anim);
+			}
+			else {
+				fireballreleased->path.PushBack({ (direction.x * 2.0f), (direction.y * 2.0f) }, 25, &fireballreleased->anim);
+			}
+			shoot = true;
+			// realease both painters and delete cast particle
 			fireball->SetToDelete();
-			fireball->isAlive = false;
 			fireball = nullptr;
+			fireballreleased = nullptr;
 		}
 	}
 	
@@ -70,13 +85,12 @@ void Enemy_BrownShip::Update()
 				collider->pendingToDelete = true;
 				collider = nullptr;
 			}
-		if (fireball != nullptr) {
-			fireball->SetToDelete();
-			fireball = nullptr;
-		}
-		if (fireballreleased != nullptr) {
-			fireballreleased = nullptr;
-		}
+			if (!shoot) {
+				if (!fireball->pendingToDelete) {
+					fireball->SetToDelete();
+				}
+				fireball = nullptr;
+			}
 	}
 
 	// Call to the base class. It must be called at the end

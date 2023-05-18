@@ -4,7 +4,6 @@
 #include "Enemy.h"
 #include "Path.h"
 #include "ModuleParticles.h"
-#include "Timer.h"
 
 class Enemy_BrownShip : public Enemy
 {

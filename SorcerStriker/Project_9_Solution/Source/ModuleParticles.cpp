@@ -48,6 +48,13 @@ ModuleParticles::ModuleParticles(bool startEnabled) : Module(startEnabled)
 	witchfireballreleased.lifetime = 200;
 	witchfireballreleased.anim.speed = 0.05f;
 
+	dragronShoot.anim.PushBack({ 0, 36, 7, 7 });
+	dragronShoot.anim.PushBack({ 9, 36, 7, 7 });
+	dragronShoot.anim.PushBack({ 18, 36, 7, 7 });
+	dragronShoot.anim.loop = true;
+	dragronShoot.lifetime = 200;
+	dragronShoot.anim.speed = 0.1f;
+
 }
 
 ModuleParticles::~ModuleParticles()

@@ -126,6 +126,13 @@ public:
 	{
 		return abs(v.x - x) + abs(v.y - y);
 	}
+
+	void Unit()
+	{
+		x = x / sqrt((x * x) + (y * y));
+		y = y / sqrt((x * x) + (y * y));
+
+	}
 };
 
 typedef p2Point<int> iPoint;

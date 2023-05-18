@@ -23,7 +23,7 @@ void Enemy_RedBird::Update()
 
 	path.Update();
 	currentAnim = path.GetCurrentAnimation();
-	spawnPos.y -= (App->render->cameraSpeed / 2);
+	spawnPos.y -= App->render->cameraSpeed;
 	position = spawnPos + path.GetRelativePosition();
 	if (pathing == 2) {
 		waveRatio += waveRatioSpeed;
@@ -44,26 +44,26 @@ void Enemy_RedBird::createPathing(int pathnum)
 	switch (pathnum)
 	{
 	case 0:
-		path.PushBack({ 2.0f, 3.0f }, 90, &flyAnim);
+		path.PushBack({ 1.5f, 4.0f }, 110, &flyAnim);
 		path.PushBack({ -2.0f, 0.0f }, 15, &flyAnim);
-		path.PushBack({ -2.0f, -5.0f }, 200, &flyAnim);
+		path.PushBack({ -2.0f, -4.0f }, 200, &flyAnim);
 		path.PushBack({ 0.0, 2000.0f }, 1, &flyAnim);
 		path.loop = false;
 		break;
 	case 1:
-		path.PushBack({ -2.0f, 3.0f }, 90, &flyAnim);
+		path.PushBack({ -1.5f, 4.0f }, 110, &flyAnim);
 		path.PushBack({ 2.0f, 0.0f }, 15, &flyAnim);
-		path.PushBack({ 2.0f, -5.0f }, 200, &flyAnim);
+		path.PushBack({ 2.0f, -4.0f }, 200, &flyAnim);
 		path.PushBack({ 0.0, 2000.0f }, 1, &flyAnim);
 		path.loop = false;
 		break;
 	case 2:
-		path.PushBack({ 0.0f, 1.0f }, 50, &flyAnim);
+		path.PushBack({ 0.0f, 2.0f }, 50, &flyAnim);
 		break;
 	case 3:
-		path.PushBack({ 0.0f, 2.0f }, 55, &flyAnim);
-		path.PushBack({ -2.0f, 2.0f }, 50, &flyAnim);
-		path.PushBack({ 0.0f, -4.0f }, 100, &flyAnim);
+		path.PushBack({ 0.0f, 4.0f }, 55, &flyAnim);
+		path.PushBack({ -2.0f, 5.0f }, 50, &flyAnim);
+		path.PushBack({ 0.0f, -3.0f }, 100, &flyAnim);
 		path.PushBack({ -2.0f, 2.0f }, 50, &flyAnim);
 		path.PushBack({ -2.0f, -2.0f }, 50, &flyAnim);
 		path.PushBack({ 0.0f, 2000.0f }, 1, &flyAnim);
