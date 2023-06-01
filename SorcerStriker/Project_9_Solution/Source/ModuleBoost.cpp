@@ -8,6 +8,8 @@
 
 #include "Boost.h"
 #include "Boost_LaserFist.h"
+#include "Boost_CoinBag.h"
+#include "Boost_Coin.h"
 
 #define SPAWN_MARGIN 50
 
@@ -25,8 +27,9 @@ ModuleBoost::~ModuleBoost()
 
 bool ModuleBoost::Start()
 {
-	textureBox = App->textures->Load("Assets/Sprites/Boost_Box_animacion.png");
-	textureBoost = App->textures->Load("Assets/Sprites/Punos_Power_UP.png");
+	textureBox_LaserFist = App->textures->Load("Assets/Sprites/Boost_Box_animacion.png");
+	textureBoost_LaserFist = App->textures->Load("Assets/Sprites/Punos_Power_UP.png");
+	texture_CoinBag = App->textures->Load("Assets/Sprites/Bolsa_monedas.png");
 	boostFX = App->audio->LoadFx("Assets/Fx/Todos los power ups.wav");
 
 	return true;
@@ -86,12 +89,18 @@ bool ModuleBoost::CleanUp()
 			delete Boosts[i];
 			Boosts[i] = nullptr;
 		}
+		if (spawnQueue[i].type != Boost_Type::NO_TYPE)
+		{
+			spawnQueue[i].type = Boost_Type::NO_TYPE;
+		}
 	}
 
-	App->textures->Unload(textureBox);
-	App->textures->Unload(textureBoost);
-	textureBox = nullptr;
-	textureBoost = nullptr;
+	App->textures->Unload(textureBox_LaserFist);
+	App->textures->Unload(textureBoost_LaserFist);
+	App->textures->Unload(texture_CoinBag);
+	textureBox_LaserFist = nullptr;
+	textureBoost_LaserFist = nullptr;
+	texture_CoinBag = nullptr;
 	App->audio->Unload(boostFX);
 
 	return true;
@@ -153,18 +162,6 @@ void ModuleBoost::HandleBoostDespawn()
 	}
 }
 
-void ModuleBoost::Shoot()
-{
-	for (uint i = 0; i < MAX_BOOST; ++i)
-	{
-		if (Boosts[i] != nullptr)
-		{
-			Boosts[i]->Shoot(); //Notify the enemy of a collision
-			break;
-		}
-	}
-}
-
 void ModuleBoost::SpawnBoost(const BoostSpawnpoint& info)
 {
 	// Find an empty slot in the enemies array
@@ -176,10 +173,20 @@ void ModuleBoost::SpawnBoost(const BoostSpawnpoint& info)
 			{
 			case Boost_Type::LASERFIST:
 				Boosts[i] = new Boost_LaserFist(info.x, info.y);
+				Boosts[i]->textureBoostBox = textureBox_LaserFist;
+				Boosts[i]->textureBoost = textureBoost_LaserFist;
+				break;
+			case Boost_Type::COINBAG:
+				Boosts[i] = new Boost_CoinBag(info.x, info.y);
+				Boosts[i]->textureBoostBox = texture_CoinBag;
+				Boosts[i]->textureBoost = texture_CoinBag;
+				break;
+			case Boost_Type::COIN:
+				Boosts[i] = new Boost_Coin(info.x, info.y);
+				Boosts[i]->textureBoostBox = texture_CoinBag;
+				Boosts[i]->textureBoost = texture_CoinBag;
 				break;
 			}
- 			Boosts[i]->textureBoostBox = textureBox;
-			Boosts[i]->textureBoost = textureBoost;
 			Boosts[i]->destroyedFx = boostFX;
 			break;
 		}

@@ -124,6 +124,18 @@
     <ClInclude Include="Timer.h">
       <Filter>Source Files\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Boost_CoinBag.h">
+      <Filter>Source Files\Entities\Boosts</Filter>
+    </ClInclude>
+    <ClInclude Include="Boost_Coin.h">
+      <Filter>Source Files\Entities\Boosts</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy_Tank.h">
+      <Filter>Source Files\Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy_FinalBoss.h">
+      <Filter>Source Files\Entities\Enemies</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Module.cpp">
@@ -212,6 +224,18 @@
     </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Boost_CoinBag.cpp">
+      <Filter>Source Files\Entities\Boosts</Filter>
+    </ClCompile>
+    <ClCompile Include="Boost_Coin.cpp">
+      <Filter>Source Files\Entities\Boosts</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy_Tank.cpp">
+      <Filter>Source Files\Entities\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy_FinalBoss.cpp">
+      <Filter>Source Files\Entities\Enemies</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

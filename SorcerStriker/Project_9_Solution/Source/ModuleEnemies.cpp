@@ -10,6 +10,8 @@
 #include "Enemy_RedBird.h"
 #include "Enemy_BrownShip.h"
 #include "Enemy_Mech.h"
+#include "Enemy_Tank.h"
+#include "Enemy_FinalBoss.h"
 
 #define SPAWN_MARGIN 50
 
@@ -30,6 +32,8 @@ bool ModuleEnemies::Start()
 	texture = App->textures->Load("Assets/Sprites/Emenies.png");
 	enemyDestroyedFx = App->audio->LoadFx("Assets/Fx/explosion.wav");
 	dragonstexture = App->textures->Load("Assets/Sprites/Dragones.png");
+	tanktexture = App->textures->Load("Assets/Sprites/Tanques.png");
+	finalboss = App->textures->Load("Assets/Sprites/Dragon_Final.png");
 
 	return true;
 }
@@ -128,7 +132,7 @@ void ModuleEnemies::HandleEnemiesSpawn()
 	{
 		if (spawnQueue[i].type != Enemy_Type::NO_TYPE)
 		{
-			if (spawnQueue[i].type == Enemy_Type::MECH) {
+			if (spawnQueue[i].type == Enemy_Type::MECH || spawnQueue[i].type == Enemy_Type::FINALBOSS) {
 				if (spawnQueue[i].y * SCREEN_SIZE > App->render->camera.y - 120) {
 
 					LOG("Spawning enemy at %d", spawnQueue[i].y * SCREEN_SIZE);
@@ -190,6 +194,14 @@ void ModuleEnemies::SpawnEnemy(const EnemySpawnpoint& info)
 					enemies[i] = new Enemy_Mech(info.x, info.y);
 					enemies[i]->texture = dragonstexture;
 					break;
+				case Enemy_Type::TANK:
+					enemies[i] = new Enemy_Tank(info.x, info.y);
+					enemies[i]->texture = tanktexture;
+					break;
+				case Enemy_Type::FINALBOSS:
+					enemies[i] = new Enemy_FinalBoss(info.x, info.y);
+					enemies[i]->texture = finalboss;
+					break;
 			}
 			enemies[i]->createPathing(info.pathing);
 			enemies[i]->destroyedFx = enemyDestroyedFx;
@@ -202,10 +214,19 @@ void ModuleEnemies::OnCollision(Collider* c1, Collider* c2)
 {
 	for(uint i = 0; i < MAX_ENEMIES; ++i)
 	{
-		if(enemies[i] != nullptr && enemies[i]->GetCollider() == c1)
+		if(enemies[i] != nullptr && enemies[i]->GetCollider() == c1 && !enemies[i]->Boss)
 		{
 			enemies[i]->OnCollision(c2); //Notify the enemy of a collision
 			break;
+		}
+		else if (enemies[i] != nullptr && enemies[i]->Boss) {
+			enemies[i]->OnCollision(c1);
+			if (enemies[i]->Boss) {
+				break;
+			}
+			else {
+				enemies[i]->Boss = true;
+			}
 		}
 	}
 }

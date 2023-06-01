@@ -7,9 +7,11 @@ enum class Boost_Type
 {
 	NO_TYPE,
 	LASERFIST,
+	COINBAG,
+	COIN,
 };
 
-#define MAX_BOOST 2
+#define MAX_BOOST 10
 
 struct BoostSpawnpoint
 {
@@ -63,8 +65,6 @@ public:
 	// Destroys any enemies that have moved outside the camera limits
 	void HandleBoostDespawn();
 
-	void Shoot();
-
 private:
 	// Spawns a new enemy using the data from the queue
 	void SpawnBoost(const BoostSpawnpoint& info);
@@ -77,8 +77,9 @@ private:
 	Boost* Boosts[MAX_BOOST] = { nullptr };
 
 	// The enemies sprite sheet
-	SDL_Texture* textureBox = nullptr;
-	SDL_Texture* textureBoost = nullptr;
+	SDL_Texture* textureBox_LaserFist = nullptr;
+	SDL_Texture* textureBoost_LaserFist = nullptr;
+	SDL_Texture* texture_CoinBag = nullptr;
 
 	// The audio fx for destroying an enemy
 	int boostFX = 0;

@@ -34,6 +34,9 @@ bool SceneLevel1::Start()
 	bgTextureLast = App->textures->Load("Assets/Sprites/Background-stage1-3.png");
 	bgTexturePlaya = App->textures->Load("Assets/Sprites/playa.png");
 	bgTextureMar = App->textures->Load("Assets/Sprites/Background-water.png");
+	bgTextureCastle1 = App->textures->Load("Assets/Sprites/Background-floatingcastle-1.png");
+	bgTextureCastle2 = App->textures->Load("Assets/Sprites/Background-floatingcastle-2.png");
+	bgTextureCastle3 = App->textures->Load("Assets/Sprites/Background-floatingcastle-3.png");
 	App->audio->PlayMusic("Assets/Music/stage1.ogg", 1.0f);
 	uint w, h;
 	bgRect[0].x = 0;
@@ -140,6 +143,17 @@ bool SceneLevel1::Start()
 	App->enemies->AddEnemy(Enemy_Type::BROWNSHIP, 200, -4150, 0);*/
 
 	App->boost->AddBoost(Boost_Type::LASERFIST, 120, -1800);//-1800
+	App->boost->AddBoost(Boost_Type::COINBAG, 120, -1500);//-1800
+	// tank amb 320 queda al limit
+	App->enemies->AddEnemy(Enemy_Type::TANK, 320, -9055, 0);//-1800
+	App->enemies->AddEnemy(Enemy_Type::TANK, 280, -9055, 0);
+	App->enemies->AddEnemy(Enemy_Type::TANK, 240, -9055, 0);
+
+	App->enemies->AddEnemy(Enemy_Type::TANK, -80, -9055, 1);//-1800
+	App->enemies->AddEnemy(Enemy_Type::TANK, -40, -9055, 1);
+	App->enemies->AddEnemy(Enemy_Type::TANK, 0, -9055, 1);
+
+	App->enemies->AddEnemy(Enemy_Type::FINALBOSS, 0, -500, 0);
 
 	App->render->camera.x = 0;
 	App->render->camera.y = 0;
@@ -188,11 +202,11 @@ Update_Status SceneLevel1::PostUpdate()
 	}
 
 
-	if (bgRect[0].y * SCREEN_SIZE > App->render->camera.y + (App->render->camera.h * SCREEN_SIZE)) {
+	if (bgRect[0].y > App->render->camera.y + App->render->camera.h) {
 		bgRect[0].y = bgRect[1].y - bgRect[1].h;
 		changeBG++;
 	}
-	else if (bgRect[1].y * SCREEN_SIZE > App->render->camera.y + (App->render->camera.h * SCREEN_SIZE)) {
+	else if (bgRect[1].y > App->render->camera.y + App->render->camera.h) {
 		bgRect[1].y = bgRect[0].y - bgRect[0].h;
 		changeBG++;
 	}
@@ -243,10 +257,64 @@ Update_Status SceneLevel1::PostUpdate()
 		else {
 			App->render->Blit(bgTextureMar, 0, bgRect[0].y, NULL);
 			App->render->Blit(bgTextureMar, 0, bgRect[1].y, NULL);
+			state = Scene_States::SEA;
+			changeBG = 0;
 		}
-		
 		break;
 	case Scene_States::SEA:
+		if (changeBG < 5) {
+			App->render->Blit(bgTextureMar, 0, bgRect[0].y, NULL);
+			App->render->Blit(bgTextureMar, 0, bgRect[1].y, NULL);
+		}
+		else if (changeBG < 6){
+			state = Scene_States::CASTLE;
+			App->render->cameraSpeed = App->render->cameraSpeed / 2;
+			App->render->Blit(bgTextureMar, 0, bgRect[0].y, NULL);
+			App->render->Blit(bgTextureCastle1, 0, bgRect[0].y, NULL);
+			App->render->Blit(bgTextureMar, 0, bgRect[1].y, NULL);
+			changeBG = 0;
+			bgRectAux[0] = bgRect[0];
+			bgRectAux[1] = bgRect[1];
+		}
+		break;
+	case Scene_States::CASTLE:
+
+		if (changeBG < 3) {
+			if (bgRectAux[0].y > App->render->camera.y + App->render->camera.h) {
+				bgRectAux[0].y = bgRectAux[1].y - bgRectAux[1].h;
+			}
+			else if (bgRectAux[1].y > App->render->camera.y + App->render->camera.h) {
+				bgRectAux[1].y = bgRectAux[0].y - bgRectAux[0].h;
+			}
+			App->render->Blit(bgTextureMar, 0, bgRectAux[0].y, NULL);
+			App->render->Blit(bgTextureMar, 0, bgRectAux[1].y, NULL);
+			bgRectAux[0].y += App->render->cameraSpeed;
+			bgRectAux[1].y += App->render->cameraSpeed;
+		}
+
+		if (changeBG < 1) {
+			App->render->Blit(bgTextureCastle1, 0, bgRect[0].y, NULL);
+		}
+		else if (changeBG < 2) {
+			App->render->Blit(bgTextureCastle1, 0, bgRect[0].y, NULL);
+			App->render->Blit(bgTextureCastle2, 0, bgRect[1].y, NULL);
+		}
+		else if (changeBG < 5) {
+			App->render->Blit(bgTextureCastle2, 0, bgRect[0].y, NULL);
+			App->render->Blit(bgTextureCastle2, 0, bgRect[1].y, NULL);
+		}
+		else if (changeBG < 6) {
+			App->render->Blit(bgTextureCastle2, 0, bgRect[0].y, NULL);
+			App->render->Blit(bgTextureCastle3, 0, bgRect[1].y, NULL);
+		}
+		else if (changeBG < 7) {
+			App->render->Blit(bgTextureCastle3, 0, bgRect[0].y, NULL);
+			App->render->Blit(bgTextureCastle3, 0, bgRect[1].y, NULL);
+		}
+		else {
+			App->render->Blit(bgTextureCastle3, 0, bgRect[0].y, NULL);
+			App->render->Blit(bgTextureCastle3, 0, bgRect[1].y, NULL);
+		}
 		break;
 	default:
 		break;
@@ -269,10 +337,16 @@ bool SceneLevel1::CleanUp()
 	App->textures->Unload(bgTextureForest);
 	App->textures->Unload(bgTextureFirst);
 	App->textures->Unload(bgTextureLast);
+	App->textures->Unload(bgTextureCastle1);
+	App->textures->Unload(bgTextureCastle2);
+	App->textures->Unload(bgTextureCastle3);
 	bgTextureForest = nullptr;
 	bgTextureFirst = nullptr;
 	bgTextureLast = nullptr;
 	bgTextureIntro = nullptr;
+	bgTextureCastle1 = nullptr;
+	bgTextureCastle2 = nullptr;
+	bgTextureCastle3 = nullptr;
 
 	return true;
 }

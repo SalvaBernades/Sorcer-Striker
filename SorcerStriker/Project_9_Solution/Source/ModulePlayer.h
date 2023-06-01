@@ -5,6 +5,7 @@
 #include "Animation.h"
 #include "p2Point.h"
 #include "Timer.h"
+#include "Boost.h"
 
 enum class Player_States
 {
@@ -100,6 +101,8 @@ public:
 	Timer changeScene;
 	Timer shootdelay;
 	Timer spawnInvul;
+
+	Boost* activeBoost;
 };
 
 #endif //!__MODULE_PLAYER_H__

@@ -26,7 +26,7 @@ bool SceneIntro::Start()
 	bool ret = true;
 
 	bgTexture = App->textures->Load("Assets/Sprites/cosmicgames.png");
-//	App->audio->PlayMusic("Assets/Music/introTitle.ogg", 1.0f);
+	upc = App->textures->Load("Assets/Sprites/logo_UPC.png");
 
 	char lookupTable[] = { "! @,_./0123456789$;< ?abcdefghijklmnopqrstuvwxyz" };
 	introFont = App->fonts->Load("Assets/Fonts/rtype_font3.png", lookupTable, 2);
@@ -80,7 +80,9 @@ Update_Status SceneIntro::PostUpdate()
 	App->fonts->BlitText(4, 220, introFont, "salvador bernades iglesias");
 	App->fonts->BlitText(4, 230, introFont, "biel linan garcia");
 
-	App->render->Blit(bgTexture, 0, 380, NULL);
+	App->render->Blit(upc, 74, 368, NULL);
+
+	App->render->Blit(bgTexture, 0, 255, NULL);
 
 	App->fonts->BlitText(4, 490, introFont, "github.com/joanmarquesbesses");
 	App->fonts->BlitText(4, 500, introFont, "/sorcer_striker");

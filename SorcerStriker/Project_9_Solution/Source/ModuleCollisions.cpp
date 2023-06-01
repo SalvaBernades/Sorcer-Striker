@@ -14,7 +14,7 @@ ModuleCollisions::ModuleCollisions(bool startEnabled) : Module(startEnabled)
 	matrix[Collider::Type::BOOST][Collider::Type::BOOST] = false;
 	matrix[Collider::Type::BOOST][Collider::Type::PLAYER] = true;
 	matrix[Collider::Type::BOOST][Collider::Type::ENEMY] = false;
-	matrix[Collider::Type::BOOST][Collider::Type::PLAYER_SHOT] = false;
+	matrix[Collider::Type::BOOST][Collider::Type::PLAYER_SHOT] = true;
 	matrix[Collider::Type::BOOST][Collider::Type::ENEMY_SHOT] = false;
 
 	matrix[Collider::Type::PLAYER][Collider::Type::BOOST] = true;

@@ -5,10 +5,12 @@
 #include "ModuleParticles.h"
 #include "ModuleAudio.h"
 #include "ModuleRender.h"
+#include "ModulePlayer.h"
 
 Boost::Boost(int x, int y) : position(x, y)
 {
 	spawnPos = position;
+	destroyed = false;
 }
 
 Boost::~Boost()
@@ -33,7 +35,7 @@ void Boost::Update()
 
 void Boost::Draw()
 {
-	if (currentAnim != nullptr) {
+	if (currentAnim != nullptr && !destroyed) {
 		if (taken) {
 			App->render->Blit(textureBoost, position.x, position.y, &(currentAnim->GetCurrentFrame()));
 		}
@@ -45,10 +47,12 @@ void Boost::Draw()
 
 void Boost::OnCollision(Collider* collider) 
 {
-	taken = true;
-	App->audio->PlayFx(destroyedFx);
-
-	SetToDelete();
+	if (collider->type != Collider::Type::PLAYER_SHOT) {
+		taken = true;
+		App->audio->PlayFx(destroyedFx);
+		App->player->activeBoost = this;
+		SetToDelete();
+	}
 }
 
 void Boost::SetToDelete()

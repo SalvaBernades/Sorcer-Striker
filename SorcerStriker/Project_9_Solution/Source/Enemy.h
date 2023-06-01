@@ -52,6 +52,8 @@ public:
 
 	int pathing;
 
+	bool Boss;
+
 protected:
 	// A ptr to the current animation
 	Animation* currentAnim = nullptr;

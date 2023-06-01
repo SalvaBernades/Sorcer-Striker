@@ -106,6 +106,7 @@ bool ModuleParticles::CleanUp()
 			delete particles[i];
 			particles[i] = nullptr;
 		}
+		
 	}
 	App->textures->Unload(texture);
 	texture = nullptr;
@@ -120,11 +121,14 @@ void ModuleParticles::OnCollision(Collider* c1, Collider* c2)
 		// Always destroy particles that collide
 		if (particles[i] != nullptr && particles[i]->collider == c1)
 		{
-			particles[i]->pendingToDelete = true;
-			particles[i]->collider->pendingToDelete = true;
-			if (particles[i]->collider->type = Collider::Type::PLAYER_SHOT) {
+			if (particles[i]->collider->type == Collider::Type::PLAYER_SHOT) {
+				if (c2->type == Collider::Type::BOOST) {
+					break;
+				}
 				App->particles->AddParticle(laserExplosion, particles[i]->position.x, particles[i]->position.y, Collider::Type::NONE);
 			}
+			particles[i]->pendingToDelete = true;
+			particles[i]->collider->pendingToDelete = true;
 			break;
 		}
 	}

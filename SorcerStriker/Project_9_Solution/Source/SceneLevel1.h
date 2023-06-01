@@ -11,6 +11,7 @@ enum class Scene_States
 	INTRO,
 	FOREST,
 	SEA,
+	CASTLE,
 };
 
 struct SDL_Texture;
@@ -48,7 +49,11 @@ public:
 	SDL_Texture* bgTextureLast = nullptr;
 	SDL_Texture* bgTexturePlaya = nullptr;
 	SDL_Texture* bgTextureMar = nullptr;
+	SDL_Texture* bgTextureCastle1 = nullptr;
+	SDL_Texture* bgTextureCastle2 = nullptr;
+	SDL_Texture* bgTextureCastle3 = nullptr;
 	SDL_Rect bgRect[2];
+	SDL_Rect bgRectAux[2];
 
 	int changeBG;
 

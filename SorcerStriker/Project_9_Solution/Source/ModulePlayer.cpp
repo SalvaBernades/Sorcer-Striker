@@ -12,7 +12,6 @@
 #include "ModuleBoost.h"
 
 #include <stdio.h>
-#include <string>
 
 ModulePlayer::ModulePlayer(bool startEnabled) : Module(startEnabled)
 {
@@ -90,6 +89,7 @@ bool ModulePlayer::Start()
 	playerWidth = 39;
 	playerHeigth = 42;
 
+	activeBoost = nullptr;
 	collider = App->collisions->AddCollider({ position.x + 9, position.y + 6, 21, 30 }, Collider::Type::PLAYER, this);
 
 	char lookupTable[] = { "! @,_./0123456789$;< ?abcdefghijklmnopqrstuvwxyz" };
@@ -165,7 +165,9 @@ Update_Status ModulePlayer::Update()
 				newParticle = App->particles->AddParticle(App->particles->laser, position.x + 22, position.y, Collider::Type::PLAYER_SHOT);
 				newParticle->collider->AddListener(this);
 				newParticle = nullptr;
-				App->boost->Shoot();
+				if (activeBoost != nullptr) {
+					activeBoost->Shoot();
+				}
 				App->audio->PlayFx(laserFx);
 				shootdelay.resetTimer();
 			}
@@ -309,7 +311,12 @@ void ModulePlayer::OnCollision(Collider* c1, Collider* c2)
 			lives--;
 			currentAnimation = &rollAnim;
 			hit = true;
-			App->boost->CleanUp();
+			if (activeBoost != nullptr) {
+				activeBoost->destroyed = true;
+				activeBoost->pendingToDelete = true;
+				activeBoost->taken = false;
+				activeBoost = nullptr;
+			}
 			State = Player_States::HIT;
 		}
 	}
