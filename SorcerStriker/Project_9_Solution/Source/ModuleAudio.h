@@ -39,6 +39,8 @@ public:
 	// The index will be used to handle the effect (see PlayFx)
 	uint LoadFx(const char* path);
 
+	void PlayBossMusic();
+
 	// Plays a previously loaded WAV
 	// Receives an index from the sound fx array
 	bool PlayFx(uint index, int repeat = 0);
@@ -50,6 +52,8 @@ public:
 private:
 	// The current playing music
 	Mix_Music*	music = nullptr;
+
+	Mix_Music* bossmusic = nullptr;
 
 	// An array of all the loaded sound effects
 	// Allows us to keep track of all sound fx and handle them through indices

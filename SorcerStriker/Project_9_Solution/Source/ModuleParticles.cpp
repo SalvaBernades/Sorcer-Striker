@@ -55,6 +55,14 @@ ModuleParticles::ModuleParticles(bool startEnabled) : Module(startEnabled)
 	dragronShoot.lifetime = 200;
 	dragronShoot.anim.speed = 0.1f;
 
+	finalbossfireball.anim.PushBack({ 4, 56, 10, 10 });
+	finalbossfireball.anim.PushBack({ 3, 67, 13, 14 });
+	finalbossfireball.anim.PushBack({ 1, 81, 16, 18 });
+	finalbossfireball.anim.PushBack({ 20, 54, 21, 23 });
+	finalbossfireball.anim.PushBack({ 20, 78, 21, 21 });
+	finalbossfireball.anim.loop = false;
+	finalbossfireball.anim.speed = 0.05f;
+
 }
 
 ModuleParticles::~ModuleParticles()

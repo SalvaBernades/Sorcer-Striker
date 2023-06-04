@@ -31,7 +31,8 @@ bool ModuleBoost::Start()
 	textureBoost_LaserFist = App->textures->Load("Assets/Sprites/Punos_Power_UP.png");
 	texture_CoinBag = App->textures->Load("Assets/Sprites/Bolsa_monedas.png");
 	boostFX = App->audio->LoadFx("Assets/Fx/Todos los power ups.wav");
-
+	coinFX = App->audio->LoadFx("Assets/Fx/Pillas moneda.wav");
+	
 	return true;
 }
 
@@ -173,21 +174,23 @@ void ModuleBoost::SpawnBoost(const BoostSpawnpoint& info)
 			{
 			case Boost_Type::LASERFIST:
 				Boosts[i] = new Boost_LaserFist(info.x, info.y);
+				Boosts[i]->destroyedFx = boostFX;
 				Boosts[i]->textureBoostBox = textureBox_LaserFist;
 				Boosts[i]->textureBoost = textureBoost_LaserFist;
 				break;
 			case Boost_Type::COINBAG:
 				Boosts[i] = new Boost_CoinBag(info.x, info.y);
+				Boosts[i]->destroyedFx = boostFX;
 				Boosts[i]->textureBoostBox = texture_CoinBag;
 				Boosts[i]->textureBoost = texture_CoinBag;
 				break;
 			case Boost_Type::COIN:
 				Boosts[i] = new Boost_Coin(info.x, info.y);
+				Boosts[i]->destroyedFx = coinFX;
 				Boosts[i]->textureBoostBox = texture_CoinBag;
 				Boosts[i]->textureBoost = texture_CoinBag;
 				break;
 			}
-			Boosts[i]->destroyedFx = boostFX;
 			break;
 		}
 	}

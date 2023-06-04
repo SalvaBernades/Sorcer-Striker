@@ -99,8 +99,14 @@ bool ModuleEnemies::CleanUp()
 	}
 
 	App->textures->Unload(texture);
+	App->textures->Unload(dragonstexture);
+	App->textures->Unload(tanktexture);
+	App->textures->Unload(finalboss);
 	App->audio->Unload(enemyDestroyedFx);
 	texture = nullptr;
+	dragonstexture = nullptr;
+	tanktexture = nullptr;
+	finalboss = nullptr;
 
 	return true;
 }
@@ -220,12 +226,14 @@ void ModuleEnemies::OnCollision(Collider* c1, Collider* c2)
 			break;
 		}
 		else if (enemies[i] != nullptr && enemies[i]->Boss) {
-			enemies[i]->OnCollision(c1);
-			if (enemies[i]->Boss) {
-				break;
-			}
-			else {
-				enemies[i]->Boss = true;
+			if (c2->type != Collider::Type::PLAYER) {
+				enemies[i]->OnCollision(c1);
+				if (enemies[i]->Boss) {
+					break;
+				}
+				else {
+					enemies[i]->Boss = true;
+				}
 			}
 		}
 	}

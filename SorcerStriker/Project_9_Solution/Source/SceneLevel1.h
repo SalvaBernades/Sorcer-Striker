@@ -52,10 +52,18 @@ public:
 	SDL_Texture* bgTextureCastle1 = nullptr;
 	SDL_Texture* bgTextureCastle2 = nullptr;
 	SDL_Texture* bgTextureCastle3 = nullptr;
+	SDL_Texture* bgTextureFinalCastle1 = nullptr;
+	SDL_Texture* bgTextureFinalCastle2 = nullptr;
+	SDL_Texture* bgTextureFinalCastle3 = nullptr;
+	SDL_Texture* bgTextureFinalCastle4 = nullptr;
+	SDL_Texture* bgTextureFinal = nullptr;
 	SDL_Rect bgRect[2];
 	SDL_Rect bgRectAux[2];
 
 	int changeBG;
+	int bosswarning = 0;
+	bool bossm = false;
+	bool bosssf = false;
 
 	Scene_States state;
 	bool start;

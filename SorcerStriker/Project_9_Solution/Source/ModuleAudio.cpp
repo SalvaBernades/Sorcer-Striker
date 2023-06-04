@@ -46,6 +46,8 @@ bool ModuleAudio::Init()
 		ret = false;
 	}
 
+	bossmusic = Mix_LoadMUS("Assets/Music/boss.ogg");
+
 	return ret;
 }
 
@@ -146,6 +148,14 @@ uint ModuleAudio::LoadFx(const char* path)
 	}
 
 	return ret;
+}
+
+void ModuleAudio::PlayBossMusic()
+{
+	Mix_HaltMusic();
+	Mix_FreeMusic(music);
+	music = NULL;
+	Mix_FadeInMusic(bossmusic, -1, (int)(1.0f * 1000.0f));
 }
 
 bool ModuleAudio::PlayFx(uint index, int repeat)

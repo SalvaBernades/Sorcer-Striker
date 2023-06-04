@@ -83,6 +83,7 @@ private:
 
 	// The audio fx for destroying an enemy
 	int boostFX = 0;
+	int coinFX = 0;
 };
 
 #endif // __MODULE_BOOST_H__

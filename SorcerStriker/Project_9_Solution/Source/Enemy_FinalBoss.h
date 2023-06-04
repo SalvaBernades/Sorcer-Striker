@@ -2,12 +2,14 @@
 #include "Enemy.h"
 #include "Path.h"
 #include "ModuleParticles.h"
+#include "Timer.h"
 
 enum class States {
 	FULLHP,
 	LEFTHEAD,
 	RIGHTHEAD,
-	ONEHEAD
+	ONEHEAD,
+	DEAD
 };
 
 class Enemy_FinalBoss :
@@ -33,13 +35,20 @@ private:
 
 	// This enemy has one sprite and one frame
 	// We are keeping it an animation for consistency with other enemies
-	Animation fly;
-
 	Animation idle;
+	Animation LH;
+	Animation RH;
+	Animation OH;
+
 	Collider* leftHead;
 	Collider* rigthHead;
 
+	int lasthit;
+	int shoots;
+
 	States state;
+	Timer shootDelay;
+	Timer delaybts;
 
 	Particle* fireball = nullptr;
 };

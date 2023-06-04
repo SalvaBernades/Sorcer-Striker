@@ -27,7 +27,8 @@ bool SceneMenu::Start()
 	bgTexture = App->textures->Load("Assets/Sprites/Background-menu1.png");
 	App->audio->PlayMusic("Assets/Music/introTitle.ogg", 1.0f);
 	App->textures->GetTextureSize(bgTexture,w, h);
-
+	startFX = App->audio->LoadFx("Assets/Fx/Start game.wav");
+	started = false;
 	//Bottomside collider
 	App->render->camera.x = 0;
 	App->render->camera.y = 0;
@@ -40,6 +41,10 @@ Update_Status SceneMenu::Update()
 	if (App->input->keys[SDL_SCANCODE_SPACE] == Key_State::KEY_DOWN || App->input->pads->a)
 	{
 		App->fade->FadeToBlack(this, (Module*)App->sceneLevel_1, 60);
+		if (!started) {
+			App->audio->PlayFx(startFX);
+			started = true;
+		}
 	}
 	if (App->input->keys[SDL_SCANCODE_ESCAPE] == Key_State::KEY_DOWN)
 	{
