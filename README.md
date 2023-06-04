@@ -2,7 +2,7 @@
 
 ## **Github Page:**
 
-  [https://github.com/joanmarquesbesses/Sorcer-Striker/wiki](https://github.com/joanmarquesbesses/Sorcer-Striker/wiki)
+  [https://github.com/SalvaBernades/Sorcer-Striker/wiki](https://github.com/SalvaBernades/Sorcer-Striker/wiki)
   
   
 ## **Cosmic Games Logo**
