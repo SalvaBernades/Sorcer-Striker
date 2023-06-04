@@ -2,7 +2,7 @@
 
 ## **Github Page:**
 
-  https://github.com/joanmarquesbesses/Sorcer-Striker/wiki
+  [https://github.com/joanmarquesbesses/Sorcer-Striker/wiki](https://github.com/joanmarquesbesses/Sorcer-Striker/wiki)
   
   
 ## **Cosmic Games Logo**
@@ -21,23 +21,23 @@ Sorcer Striker, known in Japan as Mahou Daisakusen is a vertically scrolling sho
 
 Salvador Bernades - *Designer*
 
-https://github.com/SalvaBernades
+[https://github.com/SalvaBernades](https://github.com/SalvaBernades)
 
 Andrea Doña - *Managment*
 
-https://github.com/poderoculto5
+[https://github.com/poderoculto5](https://github.com/poderoculto5)
 
 Joan Marquès - *Coding*
 
-https://github.com/joanmarquesbesses
+[https://github.com/joanmarquesbesses](https://github.com/joanmarquesbesses)
 
 Biel Liñal - *QA Tester*
 
-https://github.com/Biellg
+[https://github.com/Biellg](https://github.com/Biellg)
 
 Justo Tiscornia - *Artist*
 
-https://github.com/Jusstox
+[https://github.com/Jusstox](https://github.com/Jusstox)
 
 
 ## **Group Photo**
