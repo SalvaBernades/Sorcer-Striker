@@ -1,6 +1,6 @@
 # Sorcer Striker
  Projecte 1
- 
+
 Github Page:
 
 https://github.com/joanmarquesbesses/Sorcer-Striker/wiki
